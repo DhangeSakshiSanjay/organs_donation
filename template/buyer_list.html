@@ -1,0 +1,232 @@
+{% block body %}
+  
+<style>
+    /* Resetting default margin and padding */
+    body, html {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Styles for the sidebar */
+    .sidebar {
+        background-color: #333;
+        height: 100vh; /* Adjust height as needed */
+        width: 200px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 1; /* Ensure the sidebar stays on top */
+    }
+
+    /* Styles for sidebar buttons */
+    .sidebar-button {
+        background-color: #e40d6b;
+        color: white;
+        border: none;
+        margin-top: 50px;
+        padding: 10px 20px;
+        margin-bottom: 10px; /* Adjust the margin bottom to add space between buttons */
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none; /* To remove default underline for anchor tags */
+    }
+
+    .sidebar-button + .sidebar-button {
+        margin-top: 50px; /* Add margin to the top of all buttons except the first one */
+    }
+
+    .sidebar-button:hover {
+        background-color: #777;
+    }
+
+    /* Styles for logout button */
+    .logout-button {
+        background-color: #f44336; /* Red color */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin-top: auto; /* Move the logout button to the bottom */
+        cursor: pointer;
+        text-decoration: none; /* To remove default underline for anchor tags */
+        transition: background-color 0.3s;
+    }
+
+    .logout-button:hover {
+        background-color: #d32f2f; /* Darker red color on hover */
+    }
+
+    /* Styles for main section */
+    .main-section {
+        padding: 20px; 
+        margin-left: 200px; /* Adjust the margin to accommodate the sidebar */
+        background-color: #ffffff;
+        /* Replace 'your-background-image-url.jpg' with the URL or path to your background image */
+        background-size: cover;
+        background-position: center;
+        height: 94vh; /* Adjust height as needed */
+        margin-top: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Styles for the table */
+    table {
+        width: 80vw;
+        height: 200px;
+        margin-top: 30px;
+        margin-bottom: 210px;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        text-align: center;
+        font-size: larger;
+    }
+    tr{
+        height: 20px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f2f2f2;
+    }
+    
+      
+      .bt:hover {
+        color: #000000;
+      }
+      
+      .bt {
+        align-items: center;
+        color: #ffffff;
+        background: #e40d6b;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        transition: background 0.5s ease;
+        width: 60%;
+        padding: 10px;
+        font-size: 1.4em;
+        border: none;
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+        position: relative;
+        text-decoration: none;
+        z-index: 2;
+    }
+
+      
+      .bt:hover .btspan {
+        background: transparent;
+      }
+
+      h1 {
+        color: #e40d6b;
+        font-size: 36px; /* Adjust size as needed */
+        text-decoration: none; /* Text decoration doesn't apply to headings */
+    }
+    .completed, .rejected {
+        align-items: center;
+        color: #ffffff;
+        background: #079c0a;
+        border-radius: 5px;
+        display: inline-block; /* Display buttons inline */
+        justify-content: center;
+        height: 60%;
+        transition: background 0.5s ease;
+        width: 35%; /* Set width for each button */
+        font-size: 1.2em;
+        border: none;
+        text-align: center;
+        margin-right: 10px; /* Add margin between buttons */
+        margin-bottom: 10px; /* Add margin at the bottom of buttons */
+        text-decoration: none;
+    }
+
+    /* Apply additional styling to the 'rejected' button */
+    .rejected {
+        background: #da0e07; /* Change background color */
+    }
+</style>
+
+<div class="sidebar">
+    <h1><a href="hospital_dashboard" style="text-decoration: none;color: #e40d6b;">Hospital Dashboard</a></h1>
+    <a href="donor_list" class="sidebar-button" id="donor-list-btn">Donor List</a>
+    <a href="buyer_list" class="sidebar-button" id="buyer-list-btn">Buyer List</a>
+    <a href="log_out" class="logout-button" style="margin-bottom: 50px;">Logout</a>
+</div>
+
+<div class="main-section">   
+    <div class="table-data">
+        <h1 style="text-align: center; margin-top:50px;">Buyer List </h1>
+        <div class="order">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Buyer Name</th>
+                        <th>Email</th>
+                        <th>Show Application</th>
+                        <th>Organ</th>
+                        <th>Status</th>
+                        <th>Operation File</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {% for form in form_data1 %}
+                    <tr style="height: 10vh;">
+                        <td>{{ form.name }}</td>
+                        <td>{{ form.email }}</td>                       
+                        <td><a href="{% url 'document1' email=form.email %}" class="bt">Show</a></td>
+                        <td>{{ form.organ_name }}</td>
+                        <td>
+                            <button class="status completed" type="submit" name="accept_{{ form.email }}" onclick="processStatus('Accepted', '{{ form.email }}')">Accept</button>
+                            <button class="status rejected" type="submit" name="reject_{{ form.email }}" onclick="processStatus('Rejected', '{{ form.email }}')">Reject</button>
+                        </td>
+                        <td>
+                            <a href="{% url 'before_opt' email=form.email %}" style="text-decoration: none;">
+                                <button class="status completed" type="button">Before</button>
+                            </a>
+                            <a href="{% url 'after_opt' email=form.email %}">
+                                <button class="status rejected" type="button">After</button>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </form> <!-- Add more rows as needed -->
+                </tbody>
+            </table>    
+        </div>
+    </div>
+</div>
+
+<script>
+    function processStatus(status, email) {
+        if (status === 'Accepted') {
+            alert(`Application accepted for ${email}`);
+        } else if (status === 'Rejected') {
+            alert(`Application rejected for ${email}`);
+        }
+    }
+</script>
+
+   
+{% endblock body %}

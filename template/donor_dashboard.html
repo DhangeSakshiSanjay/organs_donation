@@ -1,0 +1,228 @@
+    {% block body %}
+    <style>
+        /* Custom styles for the Hospital Dashboard */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f3fae6;
+            /* Replace 'your-background-image-url.jpg' with the URL or path to your background image */
+            background-size: cover;
+            background-position: center;
+            /* Optional: Adjust background size and position as needed */
+        }
+        .container {
+            margin-top: 50px;
+            /* Adjust the top margin as needed */
+        }
+
+        .table-container {
+            padding: 70px 50px; /* Adjust the padding as needed */
+            /* Add space on both sides of the table */
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+            border: 1px solid black;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            font-size: larger;
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table tbody+tbody {
+            border-top: 2px solid #dee2e6;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
+
+        /* Center the content in the Organs List column */
+        .table tbody td:last-child {
+            text-align: center;
+        }
+
+        /* Remove border from select dropdown */
+        select.form-select {
+            border: none;
+            font-size: medium;
+        }
+
+        /* Remove border from "Choose Organs" option */
+        select.form-select option:first-child {
+            border: none;
+        }
+
+        /* Style the Donate button */
+        .btn-donate {
+            background-color: #ff3700;
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-donate:hover {
+            background-color: #0056b3;
+        }
+
+        .logout-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 20px 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-right: 30px;
+            text-decoration: none;
+            float: right; /* Align to the right */
+            margin-top: 20px; /* Add some margin from the top */
+        }
+        select.form-select {
+            border: none; /* Remove default border */
+            font-size: medium; /* Adjust font size */
+            padding: 8px; /* Add padding */
+            border-radius: 5px; /* Add border radius */
+            background-color: #fff; /* Set background color */
+            color: #333; /* Set text color */
+            cursor: pointer; /* Show pointer cursor */
+            transition: all 0.3s ease; /* Add transition for smoothness */
+            width: 100%; /* Set width to fill its container */
+            max-width: 200px; /* Set maximum width as needed */
+        }
+
+        /* Style the select dropdown options */
+        select.form-select option {
+            background-color: #fff; /* Set background color */
+            color: #333; /* Set text color */
+        }
+
+        /* Style the 'Choose Organs' option */
+        select.form-select option:first-child {
+            color: #999; /* Change text color */
+        }
+        h1{
+            margin-left: 10%;
+        }
+        .profile-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-icon {
+            width: 40px; /* Adjust as needed */
+            height: 40px; /* Adjust as needed */
+            border-radius: 50%; /* To make it circular */
+            margin-right: 10px; /* Adjust as needed */
+        }
+        
+        .user-name {
+            color: #000000;
+            margin-left: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+    </style>
+
+    <div class="container">
+        <div class="profile-info" style="margin-top: 17px;">
+            <!-- Your profile icon image -->
+            <img src="static\assets\img\portfolio\profile_icon.png" alt="Profile Icon" class="profile-icon">
+            <!-- User name -->
+            <span class="user-name" style="margin-right: 30px;">{{ user.first_name }}</span>
+        </div>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Logout button -->
+                    <a href="log_out" class="logout-btn" style="margin-top: 40px;">
+                        <i class='bx bxs-log-out-circle'></i>
+                        <span class="text">Logout</span>
+                    </a>
+                    <a href="donor" class="logout-btn" style="margin-top: 40px;">
+                        <i class='bx bxs-application-circle'></i>
+                        <span class="text">Status</span>
+                    </a>
+                    
+                    <h1 class="text-center mb-4" style="text-align: center;">Donor Dashboard</h1>
+                    <div class="table-responsive table-container">
+                        <table class="table table-striped">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Hospital Name</th>
+                                    <th scope="col">Organs List</th>
+                                    <th scope="col">Donate</th> <!-- New column -->
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                {% for hospital in hospitals_data %}
+                                <tr>
+                                    <td>{{hospital.hname}}</td>
+                                    <td class="form-control">
+                                        <select id="organSelect{{ hospital.id }}" class="form-control form-select organSelect" aria-label="Select Organ">
+                                            <option selected disabled>Choose Organs</option>
+                                            <option value="Heart">Heart</option>
+                                            <option value="Liver">Liver</option>
+                                            <option value="Kidney">Kidney</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <a id="donateBtn{{ hospital.id }}" href="form?hospital_name={{ hospital.hname }}" class="btn btn-donate donateBtn">Donate</a>
+                                    </td> <!-- New column -->
+                                </tr>
+                                
+                                {% endfor %}
+                            </form>
+                                <!-- Add more rows as needed -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var donateButtons = document.querySelectorAll('.donateBtn'); // Select all elements with the class donateBtn
+        
+        // Add event listeners for all donate buttons
+        donateButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+                event.preventDefault(); // Prevent the default action of the link
+                var hospitalId = this.id.replace('donateBtn', ''); // Extract hospital ID from button ID
+                var selectedOrgan = document.getElementById("organSelect" + hospitalId).value; // Get selected organ based on hospital ID
+                localStorage.setItem("selectedOrgan", selectedOrgan);
+                window.location.href = this.getAttribute('href'); // Redirect to the form page
+            });
+        });
+    });
+    
+</script>
+    {% endblock body %}

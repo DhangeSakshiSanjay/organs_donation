@@ -1,0 +1,27 @@
+{% block body %}
+<style>
+    .image-container {
+      margin-bottom: 20px;
+    }
+
+    .image-container img {
+      width: 500px; /* Adjust width as needed */
+      height: auto; /* Maintain aspect ratio */
+      display: block;
+      margin: 0 auto;
+    }
+
+    .image-container p {
+      text-align: center;
+    }
+    
+</style>
+<div class="image-container">
+  {% if file_url %}
+    <img src="{{ file_url }}" alt="document">
+    <p style="font-size: 30px;">Document</p>
+  {% else %}
+    <p>No document uploaded yet.</p>
+  {% endif %}
+</div>
+{% endblock body %}

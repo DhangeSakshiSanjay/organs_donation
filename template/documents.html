@@ -1,0 +1,33 @@
+{% block body %}
+<style>
+    .image-container {
+      margin-bottom: 20px;
+    }
+
+    .image-container img {
+      width: 800px; /* Adjust width as needed */
+      height: auto; /* Maintain aspect ratio */
+      display: block;
+      margin: 0 auto;
+    }
+
+    .image-container p {
+      text-align: center;
+    }
+    
+  </style>
+<div class="image-container">
+  <img src="{{ id_document_url }}" alt="id document">
+  <p style="font-size: 30px;">ID Document</p>
+</div>
+
+<!-- <div class="image-container">
+  <img src="{{ organ_donor_card_url }}" alt="healthcare proxy">
+  <p style="font-size: 30px;">Healthcare Proxy Certificate</p>
+</div> -->
+
+<div class="image-container">
+  <img src="{{ organ_donor_card_url }}" alt="organ donor card">
+  <p style="font-size: 30px;">Organ Donor Card</p>
+</div>
+{% endblock body %}

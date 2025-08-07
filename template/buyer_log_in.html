@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<style>
+    /* Add your CSS styles here */
+    .page-section {
+        padding: 80px 0;
+    }
+
+    .page-section-heading {
+        font-size: 2.5rem;
+        color: #f175c2; /* Blue color */
+    }
+
+    .divider-custom {
+        margin: 30px 0;
+        text-align: center;
+    }
+
+    .divider-custom-line {
+        width: 100%;
+        max-width: 3rem;
+        height: 0.25rem;
+        background-color: #010406; /* Blue color */
+        margin: 0 auto;
+    }
+
+    .form-floating input[type="email"],
+    .form-floating input[type="password"] {
+        border-radius: 20px;
+        padding: 1rem;
+    }
+
+    .form-floating label {
+        margin-left: 10px;
+    }
+
+    .form-floating .invalid-feedback {
+        display: none;
+        color: red;
+        margin-top: 5px;
+    }
+
+    .btn-primary {
+        background-color: #e40d6b; /* Blue color */
+        border-color: #e40d6b; /* Blue color */
+        border-radius: 20px;
+        padding: 0.75rem 2.5rem;
+        font-size: 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .btn-primary:hover {
+        background-color: #e40d6b; /* Darker blue color */
+        border-color: #e40d6b; /* Darker blue color */
+    }
+
+    .btn-primary:focus {
+        box-shadow: 0 0 0 0.2rem rgba(239, 95, 150, 0.5); /* Blue shadow */
+    }
+
+</style>
+
+<section class="page-section" id="contact">
+    <div class="container">
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mt-5">Buyer Login </h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-hand-holding-medical"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <!-- Contact Section Form-->
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+                <form id="contactForm" data-sb-form-api-token="API_TOKEN" method="POST">
+                    {% csrf_token %}
+                    <!-- Email address input-->
+                    <div class="form-floating mb-3">
+                        <input class="form-control" id="username" name="username" type="email" placeholder="name@example.com" data-sb-validations="required,email" />
+                        <label for="email">Email</label>
+                        <div class="invalid-feedback" data-sb-feedback="email:required">An email is required.</div>
+                        <div class="invalid-feedback" data-sb-feedback="email:email">Email is not valid.</div>
+                    </div>
+                    <!-- Password input-->
+                    <div class="form-floating mb-3">
+                        <input class="form-control" id="password" name="password" type="password" placeholder="" data-sb-validations="required" />
+                        <label for="password">Password</label>
+                    </div>
+                    <!-- Submit success message-->
+                    <!---->
+                    <!-- This is what your users will see when the form-->
+                    <!-- has successfully submitted-->
+                    <div class="d-none" id="submitSuccessMessage">
+                        <div class="text-center mb-3">
+                            <div class="fw-bolder">Form submission successful!</div>
+                            To activate this form, sign up at
+                            <br />
+                            <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
+                        </div>
+                    </div>
+                    <!-- Submit error message-->
+                    <!---->
+                    <!-- This is what your users will see when there is-->
+                    <!-- an error submitting the form-->
+                    <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
+                    <!-- Submit Button-->
+                    <button class="w-100 btn btn-primary btn-xl "  type="submit" style="background-color: #e40d6b;">Login Here</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock body %}

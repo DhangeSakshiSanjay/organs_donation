@@ -1,0 +1,264 @@
+{% block body %}
+<style>
+    /* Custom styles for the Hospital Dashboard */
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #f3fae6;
+        /* Replace 'your-background-image-url.jpg' with the URL or path to your background image */
+        background-size: cover;
+        background-position: center;
+        /* Optional: Adjust background size and position as needed */
+    }
+
+    .container {
+        margin-top: 50px;
+        /* Adjust the top margin as needed */
+    }
+
+    .table-container {
+        padding: 70px 50px;
+        /* Adjust the padding as needed */
+        /* Add space on both sides of the table */
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+        border: 1px solid black;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+        text-align: center;
+        font-size: larger;
+    }
+
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table tbody+tbody {
+        border-top: 2px solid #dee2e6;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.075);
+    }
+
+    /* Center the content in the Organs List column */
+    .table tbody td:last-child {
+        text-align: center;
+    }
+
+    /* Remove border from select dropdown */
+    select.form-select {
+        border: none;
+        font-size: medium;
+    }
+
+    /* Remove border from "Choose Organs" option */
+    select.form-select option:first-child {
+        border: none;
+    }
+
+    /* Style the Donate button */
+    .btn-donate {
+        background-color: #ff3700;
+        color: #fff;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+    }
+
+    .btn-donate:hover {
+        background-color: #0056b3;
+    }
+
+    .logout-btn {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 20px 8px;
+        border-radius: 100px;
+        cursor: pointer;
+        margin-right: 30px;
+        text-decoration: none;
+        float: right;
+        /* Align to the right */
+        margin-top: 20px;
+        /* Add some margin from the top */
+    }
+
+    select.form-select {
+        border: none;
+        /* Remove default border */
+        font-size: medium;
+        /* Adjust font size */
+        padding: 8px;
+        /* Add padding */
+        border-radius: 5px;
+        /* Add border radius */
+        background-color: #fff;
+        /* Set background color */
+        color: #333;
+        /* Set text color */
+        cursor: pointer;
+        /* Show pointer cursor */
+        transition: all 0.3s ease;
+        /* Add transition for smoothness */
+        width: 100%;
+        /* Set width to fill its container */
+        max-width: 200px;
+        /* Set maximum width as needed */
+    }
+
+    /* Style the select dropdown options */
+    select.form-select option {
+        background-color: #fff;
+        /* Set background color */
+        color: #333;
+        /* Set text color */
+    }
+
+    /* Style the 'Choose Organs' option */
+    select.form-select option:first-child {
+        color: #999;
+        /* Change text color */
+    }
+
+    .profile-info {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-icon {
+        width: 40px;
+        /* Adjust as needed */
+        height: 40px;
+        /* Adjust as needed */
+        border-radius: 50%;
+        /* To make it circular */
+        margin-right: 10px;
+        /* Adjust as needed */
+    }
+
+    .user-name {
+        color: #333;
+        /* Choose color */
+        font-weight: bold;
+        /* Adjust font weight */
+    }
+</style>
+
+<div class="container">
+    <div class="profile-info" style="margin-top: 17px;">
+        <!-- Profile icon image -->
+        <img src="static\assets\img\portfolio\profile_icon.png" alt="Profile Icon" class="profile-icon">
+        <!-- User name -->
+        <span class="user-name" style="margin-right: 30px;">{{ user.first_name }}</span>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Logout button -->
+                <a href="log_out" class="logout-btn" style="margin-top: 40px;">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+                <a href="buyer" class="logout-btn" style="margin-top: 40px;">
+                    <i class='bx bxs-application-circle'></i>
+                    <span class="text">Status</span>
+                </a>
+
+                <form method="GET" action="{% url 'buyer_dashboard' %}">
+                    <select id="organ-filter" class="form-select" name="organ_filter">
+                        <option value="">All Organs</option>
+                        <option value="Heart">Heart</option>
+                        <option value="Liver">Liver</option>
+                        <option value="Kidney">Kidney</option>
+                        <option value="Lungs">Lungs</option>
+                        <!-- Add options dynamically based on available organs -->
+                        {% for organ in available_organs %}
+                        <option value="{{ organ }}">{{ organ }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Apply Filter</button>
+                    </div>
+                </form>
+                
+
+                <h1 class="text-center mb-4" style="text-align: center;">Buyer Dashboard</h1>
+                <div class="table-responsive table-container">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Hospital Name</th>
+                                <th scope="col">Donor Name</th>
+                                <th scope="col">Organs Name</th>
+                                <th scope="col">Buy</th> <!-- New column -->
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            {% for form in form_data %}
+                            {% if form.status != "accepted" and form.status != "rejected" %}
+                            <tr>
+                                <td>{{ form.hospital_name }}</td>
+                                <td>{{ form.name }}</td>
+                                <!-- <td>{{ form.donor_name }}</td> -->
+                                <td>{{ form.organ_name }}</td>
+                                <td>
+                                    <a href="form1?hospital_name={{ form.hospital_name }}&organ_name={{ form.organ_name }}" class="btn btn-donate">Buy</a>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to apply the filter
+    function applyFilter() {
+        console.log("Selected organ:", selectedOrgan);
+
+        var selectedOrgan = document.getElementById('organ-filter').value.toLowerCase(); // Convert to lowercase for case-insensitive comparison
+        var rows = document.querySelectorAll('.text-center tbody tr');
+
+        // Hide all rows initially
+        rows.forEach(function (row) {
+            row.style.display = 'none';
+        });
+
+        // Show/hide rows based on selected organ
+        rows.forEach(function (row) {
+            var organCell = row.querySelector('td:nth-child(3)').innerText.trim().toLowerCase(); // Get the text and trim any extra whitespace, and convert to lowercase
+            if (selectedOrgan === '' || organCell === selectedOrgan) {
+                row.style.display = 'table-row'; // Show the row
+            }
+        });
+    }
+</script>
+
+{% endblock body %}

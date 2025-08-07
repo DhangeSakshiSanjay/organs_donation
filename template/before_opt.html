@@ -1,0 +1,117 @@
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1{
+        color: #e40d6b;
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .upload-form {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    label {
+        display: inline-block;
+        background-color: #e40d6b;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 10px; /* Added margin-bottom */
+    }
+
+    input[type="submit"] {
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    img {
+        
+        max-width: 100%;
+        margin-top: 10px;
+        display: block; /* Make the image a block element */
+        margin-left: auto; /* Center the image horizontally */
+        margin-right: auto; 
+    }
+</style>
+
+<h1>Upload File Before Operation</h1>
+<div class="container">
+    <h2>Upload File or Image</h2>
+    <form action="" method="post" enctype="multipart/form-data" class="upload-form">
+        {% csrf_token %}
+        <input type="file" name="file" id="file" onchange="updateFileDetails(this)">
+        <label for="file">Choose File</label>
+        <img id="uploaded-image" style="display: none;">
+        <span id="file-name"></span> <!-- Span to display selected file name -->
+        <br>
+        <input type="submit" value="Upload">
+    </form>
+</div>
+
+<script>
+    function updateFileDetails(input) {
+        var fileName = input.files[0].name;
+        document.getElementById("file-name").textContent = fileName;
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById("uploaded-image").src = e.target.result;
+            document.getElementById("uploaded-image").style.display = "block";
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    document.querySelector('.upload-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Perform AJAX request to handle file upload
+        var formData = new FormData(this);
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Image uploaded successfully!');
+                // Redirect to the buyer_list page
+                window.location.href = '/buyer_list';
+            } else {
+                alert('Failed to upload image.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while uploading the image.');
+        });
+    });
+</script>
